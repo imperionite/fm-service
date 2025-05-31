@@ -1,0 +1,8 @@
+### Retrieve all services
+GET http://localhost:3000/api/services HTTP/1.1
+
+### Retrieve service by id
+GET http://localhost:3000/api/services/683a91d1b0e8ce8c301f4aa8 HTTP/1.1
+
+### Retrieve service by id
+GET http://localhost:3000/api/services?category=Financial%20Analysis&industry=Retail HTTP/1.1
