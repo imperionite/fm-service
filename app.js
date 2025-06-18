@@ -8,6 +8,9 @@ const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./utils/swagger");
+
 const app = express();
 const seedService = require("./seeds/service");
 const serviceRouter = require("./routes/service");
@@ -29,7 +32,6 @@ app.use(
   })
 );
 
-app.use(helmet());
 app.use(express.static(path.join(__dirname, "public")));
 
 let dbURL;
@@ -58,7 +60,20 @@ db.on("error", (error) => {
   console.error(`MongoDB connection error: ${error}`);
 });
 
+// ##### api routes #####
 app.use("/api/services", serviceRouter);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "upgrade-insecure-requests": [],
+        // other directives as needed
+      },
+    },
+  })
+);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

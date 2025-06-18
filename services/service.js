@@ -1,6 +1,8 @@
-const Service = require('../models/service')
+// services/service.js
+const Service = require('../models/service');
 const { cacheMethodCalls } = require("../utils/cache");
 
+// Define the raw service logic object
 const serviceService = {
   async findServices(query, page = 1, limit = 9) {
     const skip = (page - 1) * limit;
@@ -36,11 +38,14 @@ const serviceService = {
 };
 
 // Wrap with caching proxy
-// Specified methods that modify data and should flush cache
 const cachedService = cacheMethodCalls(serviceService, [
   "createService",
   "updateService",
   "deleteService",
 ]);
 
-module.exports = cachedService;
+// Export both for different consumption needs (app uses cached, test uses raw)
+module.exports = {
+  serviceService: serviceService, // The raw service logic for testing
+  cachedService: cachedService,   // The cached service for application use
+};
