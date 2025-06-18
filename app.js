@@ -2,18 +2,21 @@ const config = require("./utils/config");
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
-const mongoose = require("mongoose");
 const helmet = require("helmet");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 
+const mongoose = require("mongoose");
+const { connectDB } = require("./utils/db");
+
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./utils/swagger");
 
-const app = express();
 const seedService = require("./seeds/service");
 const serviceRouter = require("./routes/service");
+
+const app = express();
 
 const allowedOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(",")
@@ -34,34 +37,20 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "public")));
 
-let dbURL;
-if (process.env.NODE_ENV === "test") {
-  dbURL = config.mongo_url_test;
-} else {
-  dbURL = config.mongo_url;
-}
-
-async function connectDB() {
-  try {
-    await mongoose.connect(dbURL);
-    // Run the seeding logic
+// Connect DB
+connectDB().then(async () => {
+  if (process.env.NODE_ENV !== "test") {
     await seedService();
-
-    console.log(`Database connected: ${dbURL}`);
-  } catch (error) {
-    console.error(`Connection error: ${error}`);
   }
-}
+});
 
-connectDB();
-
-const db = mongoose.connection;
-db.on("error", (error) => {
+mongoose.connection.on("error", (error) => {
   console.error(`MongoDB connection error: ${error}`);
 });
 
-// ##### api routes #####
+// API routes
 app.use("/api/services", serviceRouter);
+// route for API Docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(
@@ -69,7 +58,6 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         "upgrade-insecure-requests": [],
-        // other directives as needed
       },
     },
   })

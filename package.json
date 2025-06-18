@@ -5,7 +5,7 @@
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "NODE_ENV=development nodemon ./bin/www",
-    "test": "mocha --exit"
+    "test": "NODE_ENV=test mocha --exit"
   },
   "dependencies": {
     "@faker-js/faker": "^9.8.0",
@@ -25,6 +25,7 @@
   "devDependencies": {
     "chai": "^5.2.0",
     "mocha": "^11.7.0",
+    "mongodb-memory-server": "^10.1.4",
     "nodemon": "^3.1.10",
     "sinon": "^21.0.0",
     "supertest": "^7.1.1"
