@@ -1,6 +1,6 @@
 # fm-service
 
-This application is a **Services Management API** built with Node.js, Express, MongoDB, and Redis caching. It provides a RESTful interface to create, read, update, delete, and query business service offerings. Each service has attributes such as name, description, category, industry, price, duration, and tags. The API is built with Node.js, Express, MongoDB (Mongoose), and Redis caching.
+**FM-Service** application is a **Services Management API** built with Node.js, Express, MongoDB, and Redis caching. It provides a RESTful interface to create, read, update, delete, and query business service offerings. Each service has attributes such as name, description, category, industry, price, duration, and tags. The API is built with Node.js, Express, MongoDB (Mongoose), and Redis caching.
 
 ### Core Functions:
 
