@@ -1,25 +1,34 @@
+const redis = require("redis");
 const config = require("./config");
-const redis = require('redis');
 
-// Create the Redis client
-const client = redis.createClient({
-  url: config.redis_url,  // Use the URL from your config
-  socket: {
-    tls: process.env.NODE_ENV === 'production',  // Enable TLS only in production
-    rejectUnauthorized: process.env.NODE_ENV === 'production',
-  },
+let client;
+
+if (process.env.NODE_ENV === "production") {
+  client = redis.createClient({
+    socket: {
+      host: config.redis_host,
+      port: config.redis_port,
+    },
+    username: config.redis_username,
+    password: config.redis_password,
+  });
+} else {
+  client = redis.createClient({
+    url: config.redis_url,
+  });
+}
+
+client.connect();
+
+client.on("connect", () => {
+  console.log("✅ Connected to Redis");
 });
 
-client.connect();  // Connect to Redis
-
-client.on('connect', () => {
-  console.log('Connected to Redis');
+client.on("error", (err) => {
+  console.error("❌ Redis connection error:", err);
 });
 
-client.on('error', (err) => {
-  console.error('Redis connection error:', err);
-});
-
+// Cache method calls logic
 const cacheMethodCalls = (
   object,
   methodsToFlushCacheWith = [],
@@ -28,39 +37,45 @@ const cacheMethodCalls = (
   const handler = {
     get: (module, methodName) => {
       const method = module[methodName];
-      if (typeof method !== 'function') {
+      if (typeof method !== "function") {
         return method;
       }
       return async (...methodArgs) => {
+        // Check if we need to flush cache for this method
         if (methodsToFlushCacheWith.includes(methodName)) {
           try {
-            await client.flushDb();  // Flush Redis DB
+            await client.flushDb(); // Flush the Redis DB
           } catch (err) {
-            console.error('Redis flushDb error:', err);
+            console.error("Redis flushDb error:", err);
           }
           return await method.apply(module, methodArgs);
         }
 
+        // Generate the cache key based on method and arguments
         const cacheKey = `${methodName}-${JSON.stringify(methodArgs)}`;
+
         try {
-          const cacheResult = await client.get(cacheKey);  // Get cached value
+          // Attempt to retrieve the cached value
+          const cacheResult = await client.get(cacheKey);
           if (cacheResult) {
-            return JSON.parse(cacheResult);  // Return the parsed cache value if available
+            return JSON.parse(cacheResult); // Return the parsed cached value
           }
         } catch (err) {
-          console.error('Redis get error:', err);
+          console.error("Redis get error:", err);
         }
 
+        // If not found in cache, call the actual method
         const result = await method.apply(module, methodArgs);
 
         try {
+          // Cache the result for future use
           await client.setEx(
             cacheKey,
-            cacheExpirySeconds,  // Cache expiration time in seconds
-            JSON.stringify(result)  // Set the result in Redis as a JSON string
+            cacheExpirySeconds, // Cache expiration in seconds
+            JSON.stringify(result) // Set the result as a JSON string
           );
         } catch (err) {
-          console.error('Redis setEx error:', err);
+          console.error("Redis setEx error:", err);
         }
 
         return result;
@@ -68,6 +83,7 @@ const cacheMethodCalls = (
     },
   };
 
+  // Return a Proxy that intercepts method calls for caching
   return new Proxy(object, handler);
 };
 
