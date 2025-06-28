@@ -10,6 +10,7 @@ const redis_username = process.env.REDIS_USERNAME
 const redis_host = process.env.REDIS_HOST
 const redis_password = process.env.REDIS_PASSWORD
 const redis_port = process.env.REDIS_PORT
+const redis_url = process.env.REDIS_URL
 
 
 const config = {

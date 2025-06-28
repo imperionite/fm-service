@@ -21,11 +21,11 @@ if (process.env.NODE_ENV === "production") {
 client.connect();
 
 client.on("connect", () => {
-  console.log("✅ Connected to Redis");
+  console.log("Connected to Redis");
 });
 
 client.on("error", (err) => {
-  console.error("❌ Redis connection error:", err);
+  console.error("Redis connection error:", err);
 });
 
 // Cache method calls logic
