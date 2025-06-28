@@ -2,6 +2,9 @@
   "name": "fm-service",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+  "node": "22.12.0"
+},
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "NODE_ENV=development nodemon ./bin/www",
