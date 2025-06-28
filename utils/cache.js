@@ -1,10 +1,24 @@
 const config = require("./config");
-const Redis = require("ioredis");
+const redis = require('redis');
 
-const redis = new Redis(config.redis_url, {
-  tls: process.env.NODE_ENV === 'production' ? {} : undefined, // Enable TLS in production only
+// Create the Redis client
+const client = redis.createClient({
+  url: config.redis_url,  // Use the URL from your config
+  socket: {
+    tls: process.env.NODE_ENV === 'production',  // Enable TLS only in production
+    rejectUnauthorized: process.env.NODE_ENV === 'production',
+  },
 });
 
+client.connect();  // Connect to Redis
+
+client.on('connect', () => {
+  console.log('Connected to Redis');
+});
+
+client.on('error', (err) => {
+  console.error('Redis connection error:', err);
+});
 
 const cacheMethodCalls = (
   object,
@@ -14,40 +28,39 @@ const cacheMethodCalls = (
   const handler = {
     get: (module, methodName) => {
       const method = module[methodName];
-      if (typeof method !== "function") {
+      if (typeof method !== 'function') {
         return method;
       }
       return async (...methodArgs) => {
         if (methodsToFlushCacheWith.includes(methodName)) {
           try {
-            await redis.flushdb();
+            await client.flushDb();  // Flush Redis DB
           } catch (err) {
-            console.error("Redis flushdb error:", err);
+            console.error('Redis flushDb error:', err);
           }
           return await method.apply(module, methodArgs);
         }
 
         const cacheKey = `${methodName}-${JSON.stringify(methodArgs)}`;
         try {
-          const cacheResult = await redis.get(cacheKey);
+          const cacheResult = await client.get(cacheKey);  // Get cached value
           if (cacheResult) {
-            return JSON.parse(cacheResult);
+            return JSON.parse(cacheResult);  // Return the parsed cache value if available
           }
         } catch (err) {
-          console.error("Redis get error:", err);
+          console.error('Redis get error:', err);
         }
 
         const result = await method.apply(module, methodArgs);
 
         try {
-          await redis.set(
+          await client.setEx(
             cacheKey,
-            JSON.stringify(result),
-            "EX",
-            cacheExpirySeconds
+            cacheExpirySeconds,  // Cache expiration time in seconds
+            JSON.stringify(result)  // Set the result in Redis as a JSON string
           );
         } catch (err) {
-          console.error("Redis set error:", err);
+          console.error('Redis setEx error:', err);
         }
 
         return result;
