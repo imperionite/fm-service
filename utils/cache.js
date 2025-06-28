@@ -1,7 +1,10 @@
 const config = require("./config");
 const Redis = require("ioredis");
 
-const redis = new Redis(config.redis_url);
+const redis = new Redis(config.redis_url, {
+  tls: process.env.NODE_ENV === 'production' ? {} : undefined, // Enable TLS in production only
+});
+
 
 const cacheMethodCalls = (
   object,
