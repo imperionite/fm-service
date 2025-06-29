@@ -8,8 +8,6 @@ if (process.env.NODE_ENV === "production") {
     socket: {
       host: config.redis_host,
       port: config.redis_port,
-      minVersion: 'TLSv1.2',
-      tls: true
     },
     username: config.redis_username,
     password: config.redis_password,
