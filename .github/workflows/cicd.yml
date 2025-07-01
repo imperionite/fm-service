@@ -1,0 +1,67 @@
+name: Node.js CI/CD
+
+on:
+  push:
+    branches:
+      - main 
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    env:
+      # Set NODE_ENV to 'test' to activate conditional logic in app.js and utils/db.js/cache.js
+      NODE_ENV: "test"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.12' 
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run unit tests
+        run: yarn test
+
+  deploy:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+    needs: test
+    if: success() && github.ref == 'refs/heads/main'
+
+    env:
+      RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Trigger Render Deployment
+        run: |
+          echo "Triggering Render deployment for Node.js service via deploy hook."
+          # Install curl if not already available (usually is on ubuntu-latest)
+          sudo apt-get update && sudo apt-get install -y curl
+
+          # Send a POST request to Render's deploy hook URL.
+          # The deploy hook URL itself authenticates the request, so no Authorization header is needed.
+          # The 'clearCache=true' parameter is not applicable for deploy hooks,
+          # as they typically trigger a standard build.
+          curl -X POST \
+            "${{ env.RENDER_DEPLOY_HOOK_URL }}" \
+            --fail \
+            --show-error \
+            --silent \
+            --output /dev/null # Suppress curl output to keep logs clean
+
+          echo "Render deployment triggered successfully!"
+          echo "Check Render dashboard for deployment status."

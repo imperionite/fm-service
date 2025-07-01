@@ -107,6 +107,7 @@ graph TD
 - [Error Handling](#error-handling)
 - [Usage & Pagination](#usage--pagination)
 - [Unit Test Coverage](#unit-test-coverage)
+- [CI/CD Pipeline](#cicdpipeline)
 
 ---
 
@@ -520,3 +521,67 @@ graph TD
 - This diagram shows the deployment environment components and how they interact. It shows the microservice components, data stores, and client interaction points.
 - The Seeder runs once on startup to populate MongoDB with initial data.
 - Redis cache improves performance by storing frequently requested service data.
+
+
+## CI/CD Pipeline
+
+This document outlines the Continuous Integration (CI) and Continuous Deployment (CD) pipeline implemented for the Node.js/Express application using GitHub Actions. The pipeline automates the process of testing code changes and deploying the application to Render upon successful validation.
+
+Overview
+The pipeline is triggered by pushes to the main branch and by pull requests targeting main. It consists of two main jobs:
+
+Test Job: Sets up a Node.js environment, installs dependencies, and executes the unit test suite.
+
+Deploy Job: Runs only if the Test Job passes successfully and the push is to the main branch. It triggers a new deployment of the application on Render.
+
+Key Components & Technologies
+GitHub Actions: The automation platform used to define and execute the CI/CD workflow.
+
+Node.js 22.12: The specified Node.js version for the build environment.
+
+Yarn: The package manager used for installing dependencies.
+
+mocha & chai: The testing framework and assertion library used for writing unit tests.
+
+supertest: Used for testing HTTP endpoints by making requests to the Express application.
+
+sinon: Used for mocking and stubbing external dependencies (like the serviceService and the Redis client) to ensure tests run in isolation.
+
+In-Memory MongoDB (mongodb-memory-server): The utils/db.js module is configured to dynamically start an in-memory MongoDB instance for tests, eliminating the need for a real MongoDB server.
+
+In-Memory Redis Mock (Custom): The utils/cache.js module is configured to use a custom, in-memory mock for the node-redis client when in test mode. This prevents actual network connections to Redis.
+
+Environment Variable (NODE_ENV): The NODE_ENV environment variable is set to “test” in the GitHub Actions workflow to activate conditional logic in app.js, utils/db.js, and utils/cache.js for test-specific configurations.
+
+Render Deploy Hook: Used by GitHub Actions to trigger deployments.
+
+RENDER_DEPLOY_HOOK_URL_NODE (GitHub Secret): The unique deploy hook URL for the specific Render Node.js service, stored securely as a GitHub secret. This URL contains the necessary authentication token.
+
+curl: A command-line tool used in the GitHub Actions workflow to make the HTTP POST request to Render’s deploy hook URL.
+
+Workflow (.github/workflows/node-ci.yml)
+The node-ci.yml file defines the complete CI/CD pipeline:
+
+test Job:
+
+Checkout code: Clones the repository.
+
+Set up Node.js: Configures the Node.js environment and caches Yarn dependencies.
+
+Install dependencies: Installs project dependencies from package.json using yarn install --frozen-lockfile.
+
+Run unit tests: Executes yarn test.
+
+deploy Job:
+
+Dependencies: This job needs: test, meaning it will only start if the test job completes successfully.
+
+Conditional Execution: It runs only if the test job was successful (if: success()) AND the push was to the main branch (github.ref == ‘refs/heads/main’). This prevents deployments from pull requests or other branches.
+
+Checkout code: Clones the repository again (for the deploy job’s context).
+
+Trigger Render Deployment:
+
+Uses curl to send a POST request directly to the RENDER_DEPLOY_HOOK_URL_NODE.
+
+The deploy hook URL handles authentication, so no separate Authorization header is required.
