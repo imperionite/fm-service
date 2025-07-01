@@ -6,7 +6,10 @@ GET https://fm-service.onrender.com/api/services HTTP/1.1
 Content-Type: application/json
 
 ### Retrieve service by id
-GET http://localhost:3000/api/services/685f5dc5985ee0678d99393a HTTP/1.1
+GET http://localhost:3000/api/services/685fdcfa0589ef8f794024b2 HTTP/1.1
+
+### Retrieve service by id
+GET https://fm-service.onrender.com/api/services/685fdcfa0589ef8f794024b2 HTTP/1.1
 
 ### Retrieve services per category & industry filters
 GET http://localhost:3000/api/services?category=Financial%20Analysis&industry=Retail HTTP/1.1
