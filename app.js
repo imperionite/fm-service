@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 
 const mongoose = require("mongoose");
-const { connectDB } = require("./utils/db");
+const { connectDB } = require("./utils/db"); // connectDB now handles test/prod logic internally
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./utils/swagger");
@@ -37,16 +37,23 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "public")));
 
-// Connect DB
+// ALWAYS call connectDB(). It handles the conditional logic for test/real DB.
 connectDB().then(async () => {
+  // Only seed services if NOT in test environment
   if (process.env.NODE_ENV !== "test") {
     await seedService();
   }
+}).catch(error => {
+  console.error(`MongoDB initial connection error during app startup: ${error}`);
+  // In a real app, you might want to exit the process if DB connection is critical
+  // process.exit(1);
 });
 
+// Mongoose connection error listener should always be active
 mongoose.connection.on("error", (error) => {
   console.error(`MongoDB connection error: ${error}`);
 });
+
 
 // API routes
 app.use("/api/services", serviceRouter);

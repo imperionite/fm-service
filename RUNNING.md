@@ -24,4 +24,8 @@ client.connect()
 .then(() => console.log('Connected to Redis'))
 .catch(console.error);
 
+# running test
+yarn test 
+yarn test > test_log.txt 2>&1
+
 ```
