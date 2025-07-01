@@ -392,6 +392,7 @@ The unit tests cover the following critical API endpoints:
 - Run tests with:
 
   ```bash
+  yarn cache clean
   yarn test
   ```
 

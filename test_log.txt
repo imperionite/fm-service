@@ -1,27 +1,21 @@
 yarn run v1.22.22
 $ NODE_ENV=test mocha --exit
-(node:53090) ExperimentalWarning: CommonJS module /Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js is loading ES Module /Users/arnel/CODES/MMDC/PT/fm-service/node_modules/chai/chai.js using require().
+Using in-memory mock Redis client for test environment.
+Mock Redis client connected (in-memory).
+(node:59216) ExperimentalWarning: CommonJS module /Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js is loading ES Module /Users/arnel/CODES/MMDC/PT/fm-service/node_modules/chai/chai.js using require().
 Support for loading ES Module in require() is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
 
 
-Connected to Redis
   Services API
     GET /api/services
-Redis get error: [SimpleError: NOAUTH Authentication required.]
-Redis setEx error: [SimpleError: NOAUTH Authentication required.]
-[0mGET /api/services [32m200 [0m14.449 ms - 93[0m
+[0mGET /api/services [32m200 [0m4.546 ms - 93[0m
       ✔ should return paginated list of services
     GET /api/services/:id
-Redis get error: [SimpleError: NOAUTH Authentication required.]
-Redis setEx error: [SimpleError: NOAUTH Authentication required.]
-[0mGET /api/services/abc123 [32m200 [0m4.699 ms - 38[0m
+[0mGET /api/services/abc123 [32m200 [0m0.867 ms - 38[0m
       ✔ should return a service by ID
-Redis get error: [SimpleError: NOAUTH Authentication required.]
-Redis setEx error: [SimpleError: NOAUTH Authentication required.]
-[0mGET /api/services/unknownId [33m404 [0m3.844 ms - 29[0m
+[0mGET /api/services/unknownId [33m404 [0m0.562 ms - 29[0m
       ✔ should return 404 if service not found
-Redis get error: [SimpleError: NOAUTH Authentication required.]
 GET /services/:id error: Error: Cast to ObjectId failed
     at Context.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js:75:28)
     at callFn (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runnable.js:366:21)
@@ -33,13 +27,11 @@ GET /services/:id error: Error: Cast to ObjectId failed
     at next (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:523:14)
     at Immediate.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:608:5)
     at process.processImmediate (node:internal/timers:491:21)
-[0mGET /api/services/invalid-id [33m400 [0m3.038 ms - 30[0m
+[0mGET /api/services/invalid-id [33m400 [0m0.687 ms - 30[0m
       ✔ should return 400 for invalid ID
     POST /api/services
-Redis flushDb error: [SimpleError: NOAUTH Authentication required.]
-[0mPOST /api/services [32m201 [0m12.600 ms - 141[0m
+[0mPOST /api/services [32m201 [0m10.177 ms - 141[0m
       ✔ should create a new service
-Redis flushDb error: [SimpleError: NOAUTH Authentication required.]
 POST /services error: Error: Validation failed
     at Context.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js:104:26)
     at callFn (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runnable.js:366:21)
@@ -51,16 +43,13 @@ POST /services error: Error: Validation failed
     at next (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:523:14)
     at Immediate.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:608:5)
     at process.processImmediate (node:internal/timers:491:21)
-[0mPOST /api/services [33m400 [0m3.584 ms - 29[0m
+[0mPOST /api/services [33m400 [0m0.850 ms - 29[0m
       ✔ should return 400 on validation error
     PUT /api/services/:id
-Redis flushDb error: [SimpleError: NOAUTH Authentication required.]
-[0mPUT /api/services/abc123 [32m200 [0m2.021 ms - 55[0m
+[0mPUT /api/services/abc123 [32m200 [0m0.623 ms - 55[0m
       ✔ should update an existing service
-Redis flushDb error: [SimpleError: NOAUTH Authentication required.]
-[0mPUT /api/services/unknownId [33m404 [0m1.737 ms - 29[0m
+[0mPUT /api/services/unknownId [33m404 [0m0.420 ms - 29[0m
       ✔ should return 404 if service to update not found
-Redis flushDb error: [SimpleError: NOAUTH Authentication required.]
 PUT /services/:id error: Error: Update failed
     at Context.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js:135:26)
     at callFn (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runnable.js:366:21)
@@ -72,16 +61,13 @@ PUT /services/:id error: Error: Update failed
     at next (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:523:14)
     at Immediate.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:608:5)
     at process.processImmediate (node:internal/timers:491:21)
-[0mPUT /api/services/abc123 [33m400 [0m2.416 ms - 25[0m
+[0mPUT /api/services/abc123 [33m400 [0m0.879 ms - 25[0m
       ✔ should return 400 on update error
     DELETE /api/services/:id
-Redis flushDb error: [SimpleError: NOAUTH Authentication required.]
-[0mDELETE /api/services/abc123 [32m204 [0m1.705 ms - -[0m
+[0mDELETE /api/services/abc123 [32m204 [0m0.281 ms - -[0m
       ✔ should delete a service
-Redis flushDb error: [SimpleError: NOAUTH Authentication required.]
-[0mDELETE /api/services/unknownId [33m404 [0m2.061 ms - 29[0m
+[0mDELETE /api/services/unknownId [33m404 [0m0.327 ms - 29[0m
       ✔ should return 404 if service to delete not found
-Redis flushDb error: [SimpleError: NOAUTH Authentication required.]
 DELETE /services/:id error: Error: Delete failed
     at Context.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js:165:26)
     at callFn (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runnable.js:366:21)
@@ -93,10 +79,10 @@ DELETE /services/:id error: Error: Delete failed
     at next (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:523:14)
     at Immediate.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:608:5)
     at process.processImmediate (node:internal/timers:491:21)
-[0mDELETE /api/services/abc123 [33m400 [0m1.982 ms - 25[0m
+[0mDELETE /api/services/abc123 [33m400 [0m0.504 ms - 25[0m
       ✔ should return 400 on delete error
 
 
-  12 passing (422ms)
+  12 passing (334ms)
 
-Done in 2.69s.
+Done in 1.99s.
