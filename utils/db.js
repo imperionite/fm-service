@@ -14,10 +14,7 @@ async function connectDB() {
   }
 
   try {
-    await mongoose.connect(dbURL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(dbURL);
 
     console.log(`Database connected: ${dbURL}`);
   } catch (error) {
