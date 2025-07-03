@@ -51,4 +51,10 @@ const ServiceSchema = new mongoose.Schema(
   }
 );
 
+// Add indexes
+ServiceSchema.index({ category: 1 });
+ServiceSchema.index({ industry: 1 });
+ServiceSchema.index({ category: 1, industry: 1 });
+ServiceSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model("Service", ServiceSchema);

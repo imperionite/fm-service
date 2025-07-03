@@ -108,6 +108,7 @@ graph TD
 - [Usage & Pagination](#usage--pagination)
 - [Unit Test Coverage](#unit-test-coverage)
 - [CI/CD Pipeline](#cicdpipeline)
+- [Database Indexing](#database-indexing)
 
 ---
 
@@ -522,7 +523,6 @@ graph TD
 - The Seeder runs once on startup to populate MongoDB with initial data.
 - Redis cache improves performance by storing frequently requested service data.
 
-
 ## CI/CD Pipeline
 
 This document outlines the Continuous Integration (CI) and Continuous Deployment (CD) pipeline implemented for the Node.js/Express application using GitHub Actions. The pipeline automates the process of testing code changes and deploying the application to Render upon successful validation.
@@ -585,3 +585,27 @@ Trigger Render Deployment:
 Uses curl to send a POST request directly to the RENDER_DEPLOY_HOOK_URL_NODE.
 
 The deploy hook URL handles authentication, so no separate Authorization header is required.
+
+## Database Indexing
+
+This app applies thoughtful indexing on the **`services`** collection to optimize API performance at scale.
+
+#### Indexes applied:
+
+| Fields                | Type          | Purpose                        |
+| --------------------- | ------------- | ------------------------------ |
+| `category`            | Single        | Fast filter by category        |
+| `industry`            | Single        | Fast filter by industry        |
+| `category + industry` | Composite     | Optimized for combined filters |
+| `createdAt`           | Single (desc) | For sorting by newest services |
+
+### Benefits:
+
+- Faster paginated queries with filters
+- Reduced load on MongoDB under high API traffic
+- Support for future analytics/reporting
+
+### Notes:
+
+- These indexes align with API query patterns in `/services`.
+- Additional indexes may be added as new features/queries are introduced.
