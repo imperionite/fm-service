@@ -2,19 +2,19 @@ yarn run v1.22.22
 $ NODE_ENV=test mocha --exit
 Using in-memory mock Redis client for test environment.
 Mock Redis client connected (in-memory).
-(node:59216) ExperimentalWarning: CommonJS module /Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js is loading ES Module /Users/arnel/CODES/MMDC/PT/fm-service/node_modules/chai/chai.js using require().
+(node:3431) ExperimentalWarning: CommonJS module /Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js is loading ES Module /Users/arnel/CODES/MMDC/PT/fm-service/node_modules/chai/chai.js using require().
 Support for loading ES Module in require() is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
 
 
   Services API
     GET /api/services
-[0mGET /api/services [32m200 [0m4.546 ms - 93[0m
+[0mGET /api/services [32m200 [0m4.561 ms - 93[0m
       ✔ should return paginated list of services
     GET /api/services/:id
-[0mGET /api/services/abc123 [32m200 [0m0.867 ms - 38[0m
+[0mGET /api/services/abc123 [32m200 [0m1.012 ms - 38[0m
       ✔ should return a service by ID
-[0mGET /api/services/unknownId [33m404 [0m0.562 ms - 29[0m
+[0mGET /api/services/unknownId [33m404 [0m0.593 ms - 29[0m
       ✔ should return 404 if service not found
 GET /services/:id error: Error: Cast to ObjectId failed
     at Context.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js:75:28)
@@ -27,10 +27,10 @@ GET /services/:id error: Error: Cast to ObjectId failed
     at next (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:523:14)
     at Immediate.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:608:5)
     at process.processImmediate (node:internal/timers:491:21)
-[0mGET /api/services/invalid-id [33m400 [0m0.687 ms - 30[0m
+[0mGET /api/services/invalid-id [33m400 [0m0.897 ms - 30[0m
       ✔ should return 400 for invalid ID
     POST /api/services
-[0mPOST /api/services [32m201 [0m10.177 ms - 141[0m
+[0mPOST /api/services [32m201 [0m10.530 ms - 141[0m
       ✔ should create a new service
 POST /services error: Error: Validation failed
     at Context.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js:104:26)
@@ -43,12 +43,12 @@ POST /services error: Error: Validation failed
     at next (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:523:14)
     at Immediate.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:608:5)
     at process.processImmediate (node:internal/timers:491:21)
-[0mPOST /api/services [33m400 [0m0.850 ms - 29[0m
+[0mPOST /api/services [33m400 [0m0.926 ms - 29[0m
       ✔ should return 400 on validation error
     PUT /api/services/:id
-[0mPUT /api/services/abc123 [32m200 [0m0.623 ms - 55[0m
+[0mPUT /api/services/abc123 [32m200 [0m0.650 ms - 55[0m
       ✔ should update an existing service
-[0mPUT /api/services/unknownId [33m404 [0m0.420 ms - 29[0m
+[0mPUT /api/services/unknownId [33m404 [0m0.472 ms - 29[0m
       ✔ should return 404 if service to update not found
 PUT /services/:id error: Error: Update failed
     at Context.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js:135:26)
@@ -61,12 +61,12 @@ PUT /services/:id error: Error: Update failed
     at next (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:523:14)
     at Immediate.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:608:5)
     at process.processImmediate (node:internal/timers:491:21)
-[0mPUT /api/services/abc123 [33m400 [0m0.879 ms - 25[0m
+[0mPUT /api/services/abc123 [33m400 [0m1.170 ms - 25[0m
       ✔ should return 400 on update error
     DELETE /api/services/:id
-[0mDELETE /api/services/abc123 [32m204 [0m0.281 ms - -[0m
+[0mDELETE /api/services/abc123 [32m204 [0m0.337 ms - -[0m
       ✔ should delete a service
-[0mDELETE /api/services/unknownId [33m404 [0m0.327 ms - 29[0m
+[0mDELETE /api/services/unknownId [33m404 [0m0.386 ms - 29[0m
       ✔ should return 404 if service to delete not found
 DELETE /services/:id error: Error: Delete failed
     at Context.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/test/services.test.js:165:26)
@@ -79,10 +79,10 @@ DELETE /services/:id error: Error: Delete failed
     at next (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:523:14)
     at Immediate.<anonymous> (/Users/arnel/CODES/MMDC/PT/fm-service/node_modules/mocha/lib/runner.js:608:5)
     at process.processImmediate (node:internal/timers:491:21)
-[0mDELETE /api/services/abc123 [33m400 [0m0.504 ms - 25[0m
+[0mDELETE /api/services/abc123 [33m400 [0m0.533 ms - 25[0m
       ✔ should return 400 on delete error
 
 
-  12 passing (334ms)
+  12 passing (331ms)
 
-Done in 1.99s.
+Done in 2.32s.
